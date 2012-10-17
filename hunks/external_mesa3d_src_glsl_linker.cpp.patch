@@ -1,0 +1,10 @@
+--- a/external/mesa3d/src/glsl/linker.cpp	2012-08-10 03:24:24.816912681 +0000
++++ b/external/mesa3d/src/glsl/linker.cpp	2012-08-10 03:38:43.520911321 +0000
+@@ -68,6 +68,7 @@
+ #include <cstdio>
+ #include <cstdarg>
+ #include <climits>
++#include <stddef.h>
+ 
+ #include <pixelflinger2/pixelflinger2_interface.h>
+ 

@@ -1,0 +1,128 @@
+--- a/frameworks/base/Android.mk	2012-08-10 03:25:12.828912682 +0000
++++ b/frameworks/base/Android.mk	2012-08-10 04:19:59.572902306 +0000
+@@ -28,10 +28,25 @@ framework_res_source_path := APPS/framew
+ 
+ # the library
+ # ============================================================
++#
++# These will be included in framework2 to avoid issues with the limit
++# on the number of classes/dex
++SECONDARY_FRAMEWORKS_SUBDIRS := \
++        core/java/android/test \
++        core/java/android/gesture \
++        core/java/android/speech/srec \
++        media/java/android/media/videoeditor \
++        media/java/android/media/audiofx \
++        media/mca/effect/java/android/media/effect \
++        media/mca/effect/java/android/media/effect/effects
++
+ include $(CLEAR_VARS)
+ 
+ # FRAMEWORKS_BASE_SUBDIRS comes from build/core/pathmap.mk
+ LOCAL_SRC_FILES := $(call find-other-java-files,$(FRAMEWORKS_BASE_SUBDIRS))
++SECONDARY_SRC_FILES := $(call find-other-java-files,$(SECONDARY_FRAMEWORKS_SUBDIRS))
++
++LOCAL_SRC_FILES := $(filter-out $(SECONDARY_SRC_FILES),$(LOCAL_SRC_FILES))
+ 
+ # EventLogTags files.
+ LOCAL_SRC_FILES += \
+@@ -58,6 +73,7 @@ LOCAL_SRC_FILES := $(filter-out \
+ ## across process boundaries.
+ ##
+ ## READ ME: ########################################################
++# BEGIN privacy-added: IPrivacySettingsManager.aidl
+ LOCAL_SRC_FILES += \
+ 	core/java/android/accessibilityservice/IAccessibilityServiceConnection.aidl \
+ 	core/java/android/accessibilityservice/IAccessibilityServiceClient.aidl \
+@@ -198,6 +214,7 @@ LOCAL_SRC_FILES += \
+ 	media/java/android/media/IMediaScannerService.aidl \
+ 	media/java/android/media/IRemoteControlClient.aidl \
+ 	media/java/android/media/IRemoteControlDisplay.aidl \
++	privacy/java/android/privacy/IPrivacySettingsManager.aidl \
+ 	media/java/android/media/IRemoteVolumeObserver.aidl \
+ 	media/java/android/media/IRingtonePlayer.aidl \
+ 	telephony/java/com/android/internal/telephony/IPhoneStateListener.aidl \
+@@ -214,6 +231,7 @@ LOCAL_SRC_FILES += \
+ 	voip/java/android/net/sip/ISipSessionListener.aidl \
+ 	voip/java/android/net/sip/ISipService.aidl
+ #
++# END privacy-added: IPrivacySettingsManager.aidl
+ 
+ 
+ # FRAMEWORKS_BASE_JAVA_SRC_DIRS comes from build/core/pathmap.mk
+@@ -252,10 +270,12 @@ $(full_classes_compiled_jar): $(framewor
+ $(LOCAL_INSTALLED_MODULE): | $(dir $(LOCAL_INSTALLED_MODULE))framework-res.apk
+ 
+ framework_built := $(call java-lib-deps,framework)
++framework_built += $(call java-lib-deps,framework2)
+ 
+ # AIDL files to be preprocessed and included in the SDK,
+ # relative to the root of the build tree.
+ # ============================================================
++# BEGIN privacy-added: PrivacySettings.aidl
+ aidl_files := \
+ 	frameworks/base/core/java/android/accounts/IAccountManager.aidl \
+ 	frameworks/base/core/java/android/accounts/IAccountManagerResponse.aidl \
+@@ -301,11 +321,13 @@ aidl_files := \
+ 	frameworks/base/graphics/java/android/graphics/Region.aidl \
+ 	frameworks/base/location/java/android/location/Criteria.aidl \
+ 	frameworks/base/location/java/android/location/Location.aidl \
++	frameworks/base/privacy/java/android/privacy/PrivacySettings.aidl \
+ 	frameworks/base/telephony/java/android/telephony/ServiceState.aidl \
+ 	frameworks/base/telephony/java/com/android/internal/telephony/IPhoneSubInfo.aidl \
+ 	frameworks/base/telephony/java/com/android/internal/telephony/ITelephony.aidl \
+ 
+ gen := $(TARGET_OUT_COMMON_INTERMEDIATES)/framework.aidl
++# END privacy-added: PrivacySettings.aidl
+ $(gen): PRIVATE_SRC_FILES := $(aidl_files)
+ ALL_SDK_FILES += $(gen)
+ $(gen): $(aidl_files) | $(AIDL)
+@@ -390,6 +412,7 @@ framework_docs_LOCAL_JAVA_LIBRARIES := \
+ 			core \
+ 			ext \
+ 			framework \
++			framework2 \
+ 
+ framework_docs_LOCAL_MODULE_CLASS := JAVA_LIBRARIES
+ framework_docs_LOCAL_DROIDDOC_HTML_DIR := docs/html
+@@ -664,7 +687,7 @@ include $(CLEAR_VARS)
+ 
+ LOCAL_SRC_FILES:=$(framework_docs_LOCAL_SRC_FILES)
+ LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
+-LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES) framework
++LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES) framework framework2
+ LOCAL_MODULE_CLASS:=$(framework_docs_LOCAL_MODULE_CLASS)
+ LOCAL_DROIDDOC_SOURCE_PATH:=$(framework_docs_LOCAL_DROIDDOC_SOURCE_PATH)
+ LOCAL_DROIDDOC_HTML_DIR:=$(framework_docs_LOCAL_DROIDDOC_HTML_DIR)
+@@ -717,6 +740,26 @@ LOCAL_DX_FLAGS := --core-library
+ 
+ include $(BUILD_JAVA_LIBRARY)
+ 
++include $(CLEAR_VARS)
++
++# FRAMEWORKS_BASE_SUBDIRS comes from build/core/pathmap.mk
++LOCAL_SRC_FILES := $(call find-other-java-files,$(SECONDARY_FRAMEWORKS_SUBDIRS))
++
++LOCAL_NO_STANDARD_LIBRARIES := true
++LOCAL_JAVA_LIBRARIES := bouncycastle core core-junit ext framework
++
++LOCAL_MODULE_TAGS := optional
++LOCAL_MODULE := framework2
++LOCAL_MODULE_CLASS := JAVA_LIBRARIES
++
++LOCAL_NO_EMMA_INSTRUMENT := true
++LOCAL_NO_EMMA_COMPILE := true
++
++#LOCAL_JARJAR_RULES := $(LOCAL_PATH)/jarjar-rules.txt
++
++LOCAL_DX_FLAGS := --core-library
++
++include $(BUILD_JAVA_LIBRARY)
+ 
+ # Include subdirectory makefiles
+ # ============================================================
+@@ -726,3 +769,4 @@ include $(BUILD_JAVA_LIBRARY)
+ ifeq (,$(ONE_SHOT_MAKEFILE))
+ include $(call first-makefiles-under,$(LOCAL_PATH))
+ endif
++

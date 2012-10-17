@@ -1,0 +1,10 @@
+--- a/external/gtest/include/gtest/internal/gtest-param-util.h	2012-08-10 03:24:25.228912681 +0000
++++ b/external/gtest/include/gtest/internal/gtest-param-util.h	2012-08-10 03:38:43.504910033 +0000
+@@ -37,6 +37,7 @@
+ #include <iterator>
+ #include <utility>
+ #include <vector>
++#include <cstddef>
+ 
+ // scripts/fuse_gtest.py depends on gtest's own header being #included
+ // *unconditionally*.  Therefore these #includes cannot be moved

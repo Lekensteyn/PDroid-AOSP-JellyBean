@@ -1,0 +1,7 @@
+--- a/frameworks/base/privacy/java/android/privacy/PrivacySettings.aidl	1970-01-01 00:00:00.000000000 +0000
++++ b/frameworks/base/privacy/java/android/privacy/PrivacySettings.aidl	2012-08-10 03:30:54.980902750 +0000
+@@ -0,0 +1,4 @@
++package android.privacy;
++
++/** {@hide} */
++parcelable PrivacySettings;

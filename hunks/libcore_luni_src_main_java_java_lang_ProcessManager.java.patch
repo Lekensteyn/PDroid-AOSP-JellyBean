@@ -1,0 +1,16 @@
+--- a/libcore/luni/src/main/java/java/lang/ProcessManager.java	2012-08-10 03:25:21.756912681 +0000
++++ b/libcore/luni/src/main/java/java/lang/ProcessManager.java	2012-08-10 03:30:49.296914377 +0000
+@@ -248,7 +248,12 @@ final class ProcessManager {
+             this.pid = pid;
+ 
+             this.errorStream = new ProcessInputStream(err);
+-            this.inputStream = new ProcessInputStream(in);
++            // BEGIN privacy-modified
++            if (PrivacyProcessManager.hasPrivacyPermission("systemLogsSetting", pid))
++                this.inputStream = new ProcessInputStream(in);
++            else
++                this.inputStream = new PrivacyInputStream();
++            // END privacy-modified            
+             this.outputStream = new ProcessOutputStream(out);
+         }
+ 

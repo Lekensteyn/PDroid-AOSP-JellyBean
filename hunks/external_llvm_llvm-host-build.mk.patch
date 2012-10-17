@@ -1,0 +1,11 @@
+--- a/external/llvm/llvm-host-build.mk	2012-08-10 03:24:39.864912681 +0000
++++ b/external/llvm/llvm-host-build.mk	2012-08-10 03:38:43.516911049 +0000
+@@ -11,6 +11,8 @@ LOCAL_CFLAGS :=	\
+ 	-Wwrite-strings	\
+ 	$(LOCAL_CFLAGS)
+ 
++LOCAL_LDLIBS := -lpthread -ldl 
++
+ ifeq ($(LLVM_ENABLE_ASSERTION),true)
+ LOCAL_CFLAGS :=	\
+ 	$(LOCAL_CFLAGS) \

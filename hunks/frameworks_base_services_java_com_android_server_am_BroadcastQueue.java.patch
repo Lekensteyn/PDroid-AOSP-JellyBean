@@ -1,0 +1,80 @@
+--- a/frameworks/base/services/java/com/android/server/am/BroadcastQueue.java	2012-08-10 03:24:58.996912682 +0000
++++ b/frameworks/base/services/java/com/android/server/am/BroadcastQueue.java	2012-08-10 03:38:43.520911321 +0000
+@@ -26,6 +26,7 @@ import android.content.IIntentReceiver;
+ import android.content.Intent;
+ import android.content.pm.PackageManager;
+ import android.content.pm.ResolveInfo;
++import android.content.Context;
+ import android.os.Bundle;
+ import android.os.Handler;
+ import android.os.IBinder;
+@@ -36,6 +37,10 @@ import android.os.SystemClock;
+ import android.os.UserId;
+ import android.util.EventLog;
+ import android.util.Slog;
++// BEGIN privacy-added
++import android.app.ActivityThread;
++import android.privacy.surrogate.PrivacyActivityManagerService;
++// END privacy-added
+ 
+ /**
+  * BROADCASTS
+@@ -52,6 +57,7 @@ public class BroadcastQueue {
+ 
+     static final int MAX_BROADCAST_HISTORY = 25;
+ 
++    Context mContext;
+     final ActivityManagerService mService;
+ 
+     /**
+@@ -444,6 +450,40 @@ public class BroadcastQueue {
+         }
+     }
+ 
++
++    // BEGIN privacy-added
++    private void enforcePrivacyPermission(Object nextReceiver, BroadcastRecord r) {
++        if (r != null && r.intent != null && r.intent.getAction() != null) {
++            
++            String packageName = null;
++            int uid = -1;
++            try { // try to get intent receiver information
++                if (nextReceiver instanceof BroadcastFilter) {
++                    packageName = ((BroadcastFilter) nextReceiver).receiverList.app.info.packageName;
++                    uid = ((BroadcastFilter) nextReceiver).receiverList.app.info.uid;
++                } else if (nextReceiver instanceof ResolveInfo) {
++                    packageName = ((ResolveInfo) nextReceiver).activityInfo.applicationInfo.packageName;
++                    uid = ((ResolveInfo) nextReceiver).activityInfo.applicationInfo.uid;
++                }
++            } catch (Exception e) {
++                // if above information is not available, exception will be thrown
++                // do nothing, this is not our intent
++                return;
++            }
++            
++            if (packageName != null && uid != -1) {
++                try {
++                    ActivityThread at = ActivityThread.systemMain();
++                    mContext = at.getSystemContext();
++                    PrivacyActivityManagerService.enforcePrivacyPermission(packageName, uid, r.intent, mContext, r.receivers.size());
++                } catch (Exception e) {
++                    return;
++                }
++            }
++        }
++    }
++    // END privacy-added
++
+     final void processNextBroadcast(boolean fromMsg) {
+         synchronized(mService) {
+             BroadcastRecord r;
+@@ -623,6 +663,9 @@ public class BroadcastQueue {
+             }
+ 
+             Object nextReceiver = r.receivers.get(recIdx);
++            // BEGIN privacy-added
++            enforcePrivacyPermission(nextReceiver, r);
++            // END privacy-added
+             if (nextReceiver instanceof BroadcastFilter) {
+                 // Simple case: this is a registered receiver who gets
+                 // a direct call.

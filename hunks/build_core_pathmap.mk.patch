@@ -1,0 +1,26 @@
+--- a/build/core/pathmap.mk	2012-08-10 03:24:16.004912681 +0000
++++ b/build/core/pathmap.mk	2012-08-10 03:28:37.272912689 +0000
+@@ -84,6 +84,7 @@ JNI_H_INCLUDE := $(call include-path-for
+ # is so common and the other framework libraries can have mutual
+ # interdependencies.
+ #
++# BEGIN privacy-added: privacy
+ FRAMEWORKS_BASE_SUBDIRS := \
+ 	$(addsuffix /java, \
+ 	    core \
+@@ -95,6 +96,7 @@ FRAMEWORKS_BASE_SUBDIRS := \
+ 	    media/mca/filterpacks \
+ 	    drm \
+ 	    opengl \
++	    privacy \
+ 	    sax \
+ 	    telephony \
+ 	    wifi \
+@@ -102,6 +104,7 @@ FRAMEWORKS_BASE_SUBDIRS := \
+ 	    icu4j \
+ 	    voip \
+ 	 )
++# END privacy-added: privacy
+ 
+ #
+ # A version of FRAMEWORKS_BASE_SUBDIRS that is expanded to full paths from

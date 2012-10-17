@@ -1,0 +1,39 @@
+--- a/libcore/luni/src/main/java/java/lang/PrivacyInputStream.java	1970-01-01 00:00:00.000000000 +0000
++++ b/libcore/luni/src/main/java/java/lang/PrivacyInputStream.java	2012-08-10 03:30:49.296914377 +0000
+@@ -0,0 +1,36 @@
++package java.lang;
++
++import java.io.IOException;
++import java.io.InputStream;
++
++/**
++ * Simulates an empty InputStream
++ * @author Svyatoslav Hresyk
++ * {@hide}
++ */
++public class PrivacyInputStream extends InputStream {
++
++    public PrivacyInputStream() {
++    }
++    
++    @Override
++    public int read() throws IOException {
++        return -1;
++    }
++    
++    @Override
++    public void close() throws IOException {
++        super.close();
++    }
++    
++    @Override
++    public int read(byte[] b, int offset, int length) throws IOException {
++        return -1;
++    }
++    
++    @Override
++    public int read(byte[] b) throws IOException {
++        return -1;
++    }
++    
++}   

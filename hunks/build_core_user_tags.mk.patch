@@ -1,0 +1,10 @@
+--- a/build/core/user_tags.mk	2012-08-10 03:24:16.004912681 +0000
++++ b/build/core/user_tags.mk	2012-08-10 03:38:20.752991525 +0000
+@@ -123,6 +123,7 @@ GRANDFATHERED_USER_MODULES += \
+ 	exc_dump \
+ 	fastboot \
+ 	framework \
++	framework2 \
+ 	FrameworkCoreHostTests \
+ 	frameworks-core-util-lib \
+ 	fsck_msdos \

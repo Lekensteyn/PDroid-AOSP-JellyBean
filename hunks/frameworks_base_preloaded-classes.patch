@@ -1,0 +1,13 @@
+--- a/frameworks/base/preloaded-classes	2012-08-10 03:25:10.860912682 +0000
++++ b/frameworks/base/preloaded-classes	2012-08-10 03:30:54.960898703 +0000
+@@ -652,6 +652,10 @@ android.provider.Settings$NameValueCache
+ android.provider.Settings$NameValueTable
+ android.provider.Settings$Secure
+ android.provider.Settings$System
++# BEGIN privacy-added
++android.privacy.PrivacySettingsManager
++android.privacy.PrivacySettings
++# END privacy-added
+ android.renderscript.RenderScript
+ android.server.BluetoothA2dpService
+ android.server.BluetoothEventLoop

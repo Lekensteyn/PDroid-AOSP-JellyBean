@@ -1,0 +1,12 @@
+--- a/frameworks/base/core/java/android/content/ContentResolver.java	2012-08-10 03:25:15.540912681 +0000
++++ b/frameworks/base/core/java/android/content/ContentResolver.java	2012-08-10 03:30:54.960898703 +0000
+@@ -39,6 +39,9 @@ import android.os.ParcelFileDescriptor;
+ import android.os.RemoteException;
+ import android.os.ServiceManager;
+ import android.os.SystemClock;
++// BEGIN privacy-added
++import android.privacy.surrogate.PrivacyContentResolver;
++// END privacy-added
+ import android.text.TextUtils;
+ import android.util.EventLog;
+ import android.util.Log;

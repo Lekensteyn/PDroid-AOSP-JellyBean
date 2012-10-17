@@ -1,0 +1,11 @@
+--- a/build/core/java.mk	2012-08-10 03:24:16.000912682 +0000
++++ b/build/core/java.mk	2012-08-10 03:38:12.464933458 +0000
+@@ -40,7 +40,7 @@ ifneq ($(LOCAL_SDK_VERSION),)
+   endif
+ else
+   ifneq ($(LOCAL_NO_STANDARD_LIBRARIES),true)
+-    LOCAL_JAVA_LIBRARIES := core core-junit ext framework $(LOCAL_JAVA_LIBRARIES)
++    LOCAL_JAVA_LIBRARIES := core core-junit ext framework framework2 $(LOCAL_JAVA_LIBRARIES)
+   endif
+ endif
+ 
