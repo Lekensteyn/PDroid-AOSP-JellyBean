@@ -1,9 +1,9 @@
 --- a/frameworks/base/services/java/com/android/server/am/ActivityManagerService.java	2012-08-10 03:24:58.988912681 +0000
 +++ b/frameworks/base/services/java/com/android/server/am/ActivityManagerService.java	2012-08-10 03:30:55.004906088 +0000
-@@ -156,6 +156,9 @@ import java.util.Map.Entry;
- import java.util.Set;
+@@ -157,6 +157,9 @@ import java.util.Set;
  import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.concurrent.atomic.AtomicLong;
+ import dalvik.system.Zygote;
 +// BEGIN privacy-added
 +import android.privacy.surrogate.PrivacyActivityManagerService;
 +// END privacy-added

@@ -34,13 +34,13 @@
  
          registerService(ACTIVITY_SERVICE, new ServiceFetcher() {
 @@ -364,7 +374,10 @@ class ContextImpl extends Context {
-         registerService(LOCATION_SERVICE, new StaticServiceFetcher() {
-                 public Object createStaticService() {
+         registerService(LOCATION_SERVICE, new ServiceFetcher() {
+                 public Object createService(ContextImpl ctx) {
                      IBinder b = ServiceManager.getService(LOCATION_SERVICE);
--                    return new LocationManager(ILocationManager.Stub.asInterface(b));
+-                    return new LocationManager(ctx, ILocationManager.Stub.asInterface(b));
 +                    // BEGIN privacy-modified
 +                    ILocationManager service = ILocationManager.Stub.asInterface(b);
-+                    return new PrivacyLocationManager(service,getStaticOuterContext());
++                    return new PrivacyLocationManager(service, ctx);
 +                    // END privacy-modified
                  }});
  
