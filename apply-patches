@@ -1,0 +1,17 @@
+#!/bin/sh
+patchdir="$1"
+
+if [ ! -d "$patchdir" ]; then
+	echo "'$1' is not a valid directory"
+	exit 1
+fi
+
+for patch in "$patchdir"/*.patch; do
+	if ! patch -N -p1 < "$patch"; then
+		echo "*** failed to apply '$patch' - aborting"
+		exit 2
+	fi
+done
+
+echo
+echo "PDroid patch has been applied"
