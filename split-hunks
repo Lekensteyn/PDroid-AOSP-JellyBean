@@ -2,9 +2,10 @@
 set -e
 
 outdir="${2:-hunks}"
+prefix="$3"
 
 if [ -z "$1" ]; then
-	echo "Usage: $0 pdroid.diff [output dir]"
+	echo "Usage: $0 pdroid.diff [output dir] [patch filename prefix]"
 	echo "If output dir is not given, 'hunks' is assumed."
 	exit 1
 fi
@@ -18,6 +19,7 @@ splitdiff -a -p1 -d "$patchfile"
 # add .patch suffix
 for file in *; do
 	if [ "${file%.patch}" = "${file}" ]; then
-		mv "$file" "$file.patch"
+		sed -r '/^[^ -+@]/d' "$file" -i
+		mv "$file" "$prefix$file.patch"
 	fi
 done
