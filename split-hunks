@@ -1,15 +1,23 @@
 #!/bin/sh
 set -e
 
+outdir="${2:-hunks}"
+
 if [ -z "$1" ]; then
-	echo "Usage: $0 pdroid.diff"
+	echo "Usage: $0 pdroid.diff [output dir]"
+	echo "If output dir is not given, 'hunks' is assumed."
 	exit 1
 fi
 
 patchfile="$(readlink -f "$1")"
 
-[ ! -d hunks ] || rmdir --ignore-fail-on-non-empty hunks
-mkdir hunks
-cd hunks
+[ -d "$outdir" ] || mkdir "$outdir"
+cd "$outdir"
 splitdiff -a -p1 -d "$patchfile"
-rename 's/$/.patch/' *
+
+# add .patch suffix
+for file in *; do
+	if [ "${file%.patch}" = "${file}" ]; then
+		mv "$file" "$file.patch"
+	fi
+done
